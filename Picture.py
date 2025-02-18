@@ -24,7 +24,10 @@ class Picture:
 
         #puts the modified pixels values from newImageData into the new image and saves it
         for pixel in self.pixels:
-            newImage.putpixel((pixel.v[0],pixel.v[1]),(pixel.v[2],pixel.v[3],pixel.v[4]))
+            try:
+                newImage.putpixel((pixel.v[0],pixel.v[1]),(pixel.v[2],pixel.v[3],pixel.v[4]))
+            except:
+                print("failed to put pixel ",pixel)
 
         #While loop that adds "(n)" until the name is not a duplicate
         named = True
@@ -38,6 +41,45 @@ class Picture:
                 named = False
 
         del newImage
+    def uniform_crop(self, offset: int) -> None:
+        self.crop(offset, offset, offset, offset)
+    #each variable is how many pixels should be cut off in that direction
+    def crop(self, x_left: int, x_right: int, y_top: int, y_bottom: int) -> None:
+        #To do the crop in place, we must algorithmically decide which pixels to delete from the list
+        #For a given pixel, if its x value < x_left, we delete it
+        #if y < y_top, we delete it
+        #...
+        i = 0
+        end = len(self.pixels)
+        while(i < end):
+            pop = False
+            if(self.pixels[i].x() < x_left):
+                pop = True
+            elif(self.pixels[i].x() >= self.width - x_right):
+                pop = True
+            elif(self.pixels[i].y() < y_top):
+                pop = True
+            elif(self.pixels[i].y() >= self.height - y_bottom):
+                pop = True
+
+            if(pop):
+                self.pixels.pop(i)
+
+                #the length of the list has changes
+                end -= 1
+                #the next pixel has no moved up one to fill the spot of the popped pixel
+                i -= 1
+            i += 1
+        #now adjust the images dimensions
+        self.width -= (x_left + x_right)
+        self.height -= (y_top + y_bottom)
+        #now overwrite the pixels coordinates
+        i = 0
+        end = len(self.pixels)
+        while(i<end):
+            self.pixels[i].set_coords(i % self.width, math.floor(i/self.width))
+            i += 1
+
 
     def gradient(self) -> None:
         for pixel in self.pixels:

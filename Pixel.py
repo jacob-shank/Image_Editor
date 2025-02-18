@@ -76,3 +76,7 @@ class Pixel:
     
     def set_b(self, B: int) -> None:
         self.v[4] = B
+    
+    def set_coords(self, x: int, y: int) -> None:
+        self.v[0] = x
+        self.v[1] = y
