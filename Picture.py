@@ -9,8 +9,6 @@ class Picture:
         self.width: int = self.image.size[0]
         self.height: int = self.image.size[1]
         self.pixels: list[Pixel] = list()
-        self.black_point: int = 0
-        self.white_point: int = 255
 
         self.name: str = file_name
 
@@ -65,48 +63,6 @@ class Picture:
     def changeBrightness(self, delta: int) -> None:
         for pixel in self.pixels:
             pixel.changeBrightness(delta)
-
-    def changeContrast(self, delta: int) -> None:
-        for pixel in self.pixels:
-            pixel.changeContrast(delta)
-
-    def changeSaturation(self, percentChange: int) -> None:
-        for pixel in self.pixels:
-            pixel.changeSaturation(percentChange)
-    
-    def setBlackPoint(self, threshhold: int, smoothing: float) -> None:
-        self.black_point = threshhold
-        if(self.black_point < 0):
-            self.black_point = 0
-        elif(self.black_point > 255):
-            self.black_point = 255
-
-        #execute the transformation
-        for pixel in self.pixels:
-            if(int(pixel.brightness()) <= self.black_point):
-                pixel.setGray(0)
-            elif(smoothing > 0 and pixel.brightness() > 0):
-                pixel.changeBrightness(-(smoothing/(pixel.brightness()-self.black_point)))
-
-    def setWhitePoint(self, threshhold: int, smoothing: float) -> None:
-        self.white_point = threshhold
-        if(self.white_point < 0):
-            self.white_point = 0
-        elif(self.white_point > 255):
-            self.white_point = 255
-
-        #execute the transformation
-        for pixel in self.pixels:
-            if(int(pixel.brightness()) >= self.white_point):
-                pixel.setGray(255)
-            elif(smoothing > 0 and pixel.brightness() > 0):
-                pixel.changeBrightness((smoothing/(self.white_point-pixel.brightness())))
-    
-    def changeWhitePoint(self, delta: int, smoothing: float) -> None:
-        self.setWhitePoint(self.white_point + delta, smoothing)
-
-    def changeBlackPoint(self, delta: int, smoothing: float) -> None:
-        self.setBlackPoint(self.black_point + delta, smoothing)
 
     def changeVignette(self, percent_cover: int, gradient_coeffiecient: float, color: tuple[int, int, int] = (0,0,0)) -> None:
         center: tuple[int, int] = (self.width/2,self.height/2)

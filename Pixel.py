@@ -13,51 +13,6 @@ class Pixel:
     #pixel level adjustment
     def changeBrightness(self, delta: int) -> None:
         self.changeColor(delta, delta, delta)
-    
-    def brightness(self) -> float:
-        return (self.v[2] + self.v[3] + self.v[4])/3
-
-    def changeContrast(self, percentChange: int) -> None:
-        # Move color closer to 128 -> decrease contrast
-        # Move color further from 128 -> increase contrast
-        # 
-        # Find colors distance to 128
-        # scale that distance by percentChange
-        # add the remaining value
-
-        #calculate distance
-        r_dist_to_center = self.v[2] - 128
-        g_dist_to_center = self.v[3] - 128
-        b_dist_to_center = self.v[4] - 128
-
-        #scale by percentChange
-        r_dist_to_center *= (percentChange/100)
-        g_dist_to_center *= (percentChange/100)
-        b_dist_to_center *= (percentChange/100)
-        
-        self.changeColor(r_dist_to_center,g_dist_to_center,b_dist_to_center)
-
-    def changeSaturation(self, percentChange: int) -> None:
-        # Move color closer to average -> decrease contrast
-        # Move color further from average -> increase contrast
-        # 
-        # Find colors distance to average (brightness)
-        # scale that distance by percentChange
-        # add the remaining value
-
-        avg = self.brightness()
-
-        #calculate distance
-        r_dist_to_center = self.v[2] - avg
-        g_dist_to_center = self.v[3] - avg
-        b_dist_to_center = self.v[4] - avg
-
-        #scale by percentChange
-        r_dist_to_center *= (percentChange/100)
-        g_dist_to_center *= (percentChange/100)
-        b_dist_to_center *= (percentChange/100)
-        
-        self.changeColor(r_dist_to_center,g_dist_to_center,b_dist_to_center)
 
     def changeVignette(self, percent_cover: float, gradient_coeffiecient: float, center: tuple[int, int], dist_to_edge: int, aspect_ratio: float, color: tuple[int, int, int]) -> None:
 
@@ -85,17 +40,17 @@ class Pixel:
             self.changeColor(int((color[0]-self.r())*change), int((color[1]-self.g())*change), int((color[2]-self.b())*change))'''
         
     def setColor(self, r: int, g: int, b: int) -> None:
-        self.v[2] = int(r)
-        self.v[3] = int(g)
-        self.v[4] = int(b)
+        self.v[2] = r
+        self.v[3] = g
+        self.v[4] = b
     
     def setGray(self, value: int) -> None:
         self.setColor(value, value, value)
 
     def changeColor(self, delta_r: int, delta_g: int, delta_b: int) -> None:
-        self.v[2] += int(delta_r)
-        self.v[3] += int(delta_g)
-        self.v[4] += int(delta_b)
+        self.v[2] += delta_r
+        self.v[3] += delta_g
+        self.v[4] += delta_b
 
     #getters and setters
     def x(self) -> int:
